@@ -40,4 +40,4 @@ Facilitar o gerenciamento e a organização das salas de estudo, evitando confli
 
 2. Clone este repositório:
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+https://github.com/Vihsacc/CP1_eng_software/tree/main
