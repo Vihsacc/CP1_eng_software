@@ -5,7 +5,7 @@
 
 Este projeto consiste em um sistema simples desenvolvido em Python que permite a alunos realizarem a reserva de salas de estudo dentro de uma instituição de ensino.
 
-O sistema funciona via terminal e permite que usuários autenticados realizem operações como visualizar disponibilidade, reservar horários e cancelar reservas.
+O sistema funciona via site e permite que usuários autenticados realizem operações como visualizar disponibilidade, reservar horários e cancelar reservas.
 
 ---
 
@@ -30,15 +30,16 @@ Facilitar o gerenciamento e a organização das salas de estudo, evitando confli
 ## 🧑‍💻 Tecnologias Utilizadas
 
 - Python 3
-- Execução via terminal (CLI)
+- Execução via site html, css e js
 
 ---
 
 ## ▶️ Como Executar o Projeto
 
 1. Certifique-se de ter o Python instalado (versão 3 ou superior)
+2. ou clone o SITE no vscode
 
-2. Clone este repositório:
+3. Clone este repositório:
 ```bash
 https://github.com/Vihsacc/CP1_eng_software/tree/main 
 ```
