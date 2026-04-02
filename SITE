@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reserva de Salas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Container de Login -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Login</h1>
+                <p class="text-gray-500">Entre para gerenciar suas salas</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Usuário</label>
+                    <input type="text" id="username" placeholder="vitor ou ana" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Senha</label>
+                    <input type="password" id="password" placeholder="123 ou 456" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+                    Entrar
+                </button>
+                <div id="login-error" class="hidden text-red-500 text-center text-sm font-medium">
+                    ❌ Usuário ou senha inválidos!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (Escondido por padrão) -->
+    <div id="dashboard" class="hidden max-w-6xl mx-auto p-4 md:p-8">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Reserva de Salas</h1>
+                <p class="text-gray-600">Bem-vindo, <span id="user-display" class="font-bold text-blue-600"></span>!</p>
+            </div>
+            <button onclick="handleLogout()" class="px-6 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 font-medium transition-all">
+                Sair
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coluna de Ações -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Nova Reserva</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Sala</label>
+                            <select id="reserva-sala" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <option>Sala 1</option>
+                                <option>Sala 2</option>
+                                <option>Sala 3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Horário (06h às 23h)</label>
+                            <input type="time" id="reserva-horario" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <button onclick="handleReservar()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-all">
+                            Confirmar Reserva
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notificações Customizadas -->
+                <div id="toast" class="hidden p-4 rounded-xl text-center font-medium animate-pulse"></div>
+            </div>
+
+            <!-- Coluna de Visualização -->
+            <div class="lg:col-span-2">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 min-h-[400px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Status das Salas</h2>
+                        <span class="text-xs text-gray-400">Atualizado em tempo real</span>
+                    </div>
+                    
+                    <div id="salas-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Conteúdo gerado pelo JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados iniciais (Baseado no seu Python)
+        const usuarios = {
+            "vitor": "123",
+            "ana": "456"
+        };
+
+        let usuarioLogado = null;
+
+        let salas = {
+            "Sala 1": [],
+            "Sala 2": [],
+            "Sala 3": []
+        };
+
+        // --- Lógica de Login ---
+        function handleLogin() {
+            const user = document.getElementById('username').value.toLowerCase();
+            const pass = document.getElementById('password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            if (usuarios[user] && usuarios[user] === pass) {
+                usuarioLogado = user;
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('user-display').innerText = user;
+                errorDiv.classList.add('hidden');
+                renderSalas();
+            } else {
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            usuarioLogado = null;
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // --- Validação de Horário ---
+        function horarioValido(horario) {
+            if (!horario) return false;
+            const hora = parseInt(horario.split(":")[0]);
+            return hora >= 6 && hora <= 23;
+        }
+
+        // --- Gerenciamento de UI ---
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `p-4 rounded-xl text-center font-medium ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function renderSalas() {
+            const container = document.getElementById('salas-container');
+            container.innerHTML = '';
+
+            for (const [nomeSala, reservas] of Object.entries(salas)) {
+                const salaDiv = document.createElement('div');
+                salaDiv.className = "p-4 rounded-xl border border-gray-100 bg-gray-50 flex flex-col h-full";
+                
+                let content = `<h3 class="font-bold text-gray-700 mb-3 border-b pb-2">${nomeSala}</h3>`;
+                
+                if (reservas.length > 0) {
+                    const sorted = [...reservas].sort((a, b) => a.horario.localeCompare(b.horario));
+                    content += '<div class="space-y-2 flex-grow">';
+                    sorted.forEach((res, index) => {
+                        const isOwner = res.nome === usuarioLogado;
+                        content += `
+                            <div class="text-sm bg-white p-2 rounded border shadow-sm flex justify-between items-center">
+                                <div>
+                                    <span class="font-bold text-blue-600">${res.horario}</span>
+                                    <p class="text-xs text-gray-500">${res.nome}</p>
+                                </div>
+                                ${isOwner ? `<button onclick="handleCancelar('${nomeSala}', '${res.horario}')" class="text-red-500 hover:bg-red-50 p-1 rounded transition-colors" title="Cancelar">✕</button>` : ''}
+                            </div>
+                        `;
+                    });
+                    content += '</div>';
+                } else {
+                    content += '<div class="flex-grow flex items-center justify-center py-4 text-gray-400 italic text-sm">Livre</div>';
+                }
+
+                salaDiv.innerHTML = content;
+                container.appendChild(salaDiv);
+            }
+        }
+
+        // --- Reservar ---
+        function handleReservar() {
+            const sala = document.getElementById('reserva-sala').value;
+            const horario = document.getElementById('reserva-horario').value;
+
+            if (!horarioValido(horario)) {
+                showToast("❌ Horário inválido! Use entre 06:00 e 23:00", "error");
+                return;
+            }
+
+            // Verifica conflito
+            const conflito = salas[sala].some(r => r.horario === horario);
+            if (conflito) {
+                showToast("❌ Este horário já está reservado!", "error");
+                return;
+            }
+
+            salas[sala].push({
+                nome: usuarioLogado,
+                horario: horario
+            });
+
+            showToast("✅ Reserva feita com sucesso!");
+            renderSalas();
+        }
+
+        // --- Cancelar ---
+        function handleCancelar(nomeSala, horario) {
+            const index = salas[nomeSala].findIndex(r => r.horario === horario && r.nome === usuarioLogado);
+            
+            if (index !== -1) {
+                salas[nomeSala].splice(index, 1);
+                showToast("✅ Reserva cancelada!");
+                renderSalas();
+            } else {
+                showToast("❌ Erro ao cancelar reserva.", "error");
+            }
+        }
+
+        // Atalho de teclado para login (Enter)
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+
+    </script>
+</body>
+</html>
