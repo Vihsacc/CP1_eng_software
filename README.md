@@ -1,47 +1,54 @@
-# CP1_eng_software
 # 📚 Sistema de Reserva de Salas de Estudo
 
-## 📌 Descrição
+## 📌 Descrição do Problema
+O processo de reserva de salas de estudo em instituições de ensino muitas vezes ocorre de forma manual ou desorganizada, gerando conflitos de horários, retrabalho e falta de visibilidade sobre a disponibilidade das salas.
 
-Este projeto consiste em um sistema simples desenvolvido em Python que permite a alunos realizarem a reserva de salas de estudo dentro de uma instituição de ensino.
-
-O sistema funciona via site e permite que usuários autenticados realizem operações como visualizar disponibilidade, reservar horários e cancelar reservas.
-
----
-
-## 🎯 Objetivo
-
-Facilitar o gerenciamento e a organização das salas de estudo, evitando conflitos de horário e permitindo melhor aproveitamento dos espaços disponíveis.
+Essa falta de controle dificulta o acesso dos alunos aos espaços de estudo e reduz a eficiência no uso dos ambientes disponíveis.
 
 ---
 
-## ⚙️ Funcionalidades
+## 🚀 Solução Proposta
+Foi desenvolvida uma plataforma web para gerenciamento de reservas de salas de estudo, permitindo que alunos realizem cadastro, login, visualizem horários disponíveis, reservem salas e acompanhem seu histórico de reservas.
 
-- 🔐 Login de usuário
-- 📅 Visualização de disponibilidade das salas
-- 🏫 Reserva de salas
-- ❌ Cancelamento de reservas
-- ⏰ Validação de horário (entre 06:00 e 23:00)
-- 📊 Exibição de horários organizados
-- 👤 Controle de reservas por usuário
+A aplicação possui autenticação segura, persistência de dados em nuvem e interface intuitiva, facilitando o gerenciamento e evitando conflitos de agendamento.
 
 ---
 
-## 🧑‍💻 Tecnologias Utilizadas
+## 🔄 Evolução do Checkpoint 1 para o Checkpoint 2
+No Checkpoint 1, o sistema era executado via terminal e possuía funcionalidades básicas de login e reserva.
 
-- Python 3
-- Execução via site html, css e js
+No Checkpoint 2, o projeto foi evoluído para uma aplicação web moderna, incluindo:
+
+- Interface web responsiva
+- Cadastro e autenticação de usuários
+- Criptografia de senha
+- Persistência de dados em nuvem com Firestore
+- Histórico individual de reservas
+- Dashboard interativo
+- Organização modular do projeto
+- Melhor experiência de uso
 
 ---
 
-## ▶️ Como Executar o Projeto
+## 🛠️ Tecnologias Utilizadas
 
-1. Certifique-se de ter o Python instalado (versão 3 ou superior)
-2. ou clone o SITE no vscode
+### Front-end:
+- React
+- Tailwind CSS
 
-3. Clone este repositório:
+### Back-end / Banco:
+- Firebase Firestore
+- Firebase Authentication
+
+### Ferramentas:
+- JavaScript
+- Vite
+
+---
+
+## ⚙️ Como Executar
+
+### 1. Clone o repositório:
 ```bash
-https://github.com/Vihsacc/CP1_eng_software/tree/main 
-```
-Links
+git clone https://github.com/seu-usuario/reserva-salas.git
 https://miro.com/app/board/uXjVGvGKf9U=/
